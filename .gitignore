@@ -23,3 +23,5 @@ smoke-shots
 .gstack/
 .neon
 .env*
+.claude
+_to
