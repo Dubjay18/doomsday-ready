@@ -4,6 +4,7 @@
  * Handler bodies (and their server-only imports) are stripped from the client bundle.
  */
 import { createServerFn } from '@tanstack/react-start'
+import { getRequestHeader } from '@tanstack/react-start/server'
 import { z } from 'zod'
 import { TRACK_BY_ID } from '../content/catalog'
 import { nextRank, rankFor } from '../shared/game'
@@ -16,6 +17,14 @@ import { answerQuestion, getQuizResult, getQuizState, recentSessions, startQuiz,
 import { getPosters, getWatchOptions } from './services/watch'
 import { getStats } from './services/xp'
 import { detectCountry, getSessionUser, requireUser } from './session'
+
+/** Public origin of the site, used for absolute og:image URLs (social scrapers need absolute links). */
+export const siteOriginFn = createServerFn({ method: 'GET' }).handler(async () => {
+  if (process.env.BETTER_AUTH_URL) return process.env.BETTER_AUTH_URL.replace(/\/$/, '')
+  const host = getRequestHeader('x-forwarded-host') ?? getRequestHeader('host') ?? 'localhost'
+  const proto = getRequestHeader('x-forwarded-proto')?.split(',')[0] ?? (/^(localhost|127\.)/.test(host) ? 'http' : 'https')
+  return `${proto}://${host.split(',')[0]}`
+})
 
 /* ── me ─────────────────────────────────────────────── */
 

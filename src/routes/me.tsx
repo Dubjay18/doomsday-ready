@@ -57,9 +57,9 @@ function MePage() {
   return (
     <main className="halftone min-h-[80vh]">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
-        <div className="panel flex flex-wrap items-center gap-6 bg-paper p-7">
-          <span className="font-display flex h-24 w-24 items-center justify-center rounded-full border-4 border-ink bg-pow text-6xl shadow-[5px_5px_0_#111]">{me.user.name[0]?.toUpperCase()}</span>
-          <div className="min-w-0 flex-1">
+        <div className="panel flex flex-wrap items-center gap-x-6 gap-y-4 bg-paper p-5 sm:p-7">
+          <span className="font-display flex h-16 w-16 flex-none items-center justify-center rounded-full border-4 border-ink bg-pow text-4xl shadow-[5px_5px_0_#111] sm:h-24 sm:w-24 sm:text-6xl">{me.user.name[0]?.toUpperCase()}</span>
+          <div className="min-w-0 flex-[1_1_14rem]">
             <div className="text-sm font-black tracking-[0.15em] text-hero-red">{me.user.isAnonymous ? 'GUEST AGENT' : 'AGENT FILE'}</div>
             {editing ? (
               <form
@@ -74,7 +74,7 @@ function MePage() {
                   onChange={(e) => setName(e.target.value)}
                   minLength={2}
                   maxLength={32}
-                  className="border-[3px] border-ink px-3 py-2 font-display text-4xl"
+                  className="min-w-0 max-w-full flex-1 border-[3px] border-ink px-3 py-2 font-display text-3xl sm:text-4xl"
                   autoFocus
                 />
                 <button type="submit" disabled={updateName.isPending} className={btnClass('yellow')}>
@@ -85,14 +85,14 @@ function MePage() {
                 </button>
               </form>
             ) : (
-              <div className="flex items-center gap-3">
-                <h1 className="font-display m-0 text-6xl">{me.user.name}</h1>
-                <button type="button" onClick={() => setEditing(true)} className="border-2 border-ink p-1.5 hover:bg-ink hover:text-paper">
+              <div className="flex items-start gap-3">
+                <h1 className="font-display m-0 min-w-0 break-words text-4xl leading-[1.05] sm:text-6xl" style={{ overflowWrap: 'anywhere' }}>{me.user.name}</h1>
+                <button type="button" onClick={() => setEditing(true)} className="mt-1 flex-none border-2 border-ink p-1.5 hover:bg-ink hover:text-paper">
                   <Icon name="pencil" size={18} />
                 </button>
               </div>
             )}
-            {me.user.email && <div className="font-semibold">{me.user.email}</div>}
+            {me.user.email && <div className="break-all font-semibold">{me.user.email}</div>}
           </div>
           {s.readyAt ? (
             <span className="font-display rotate-[-6deg] border-4 border-win px-4 py-1 text-4xl text-win">READY!</span>
