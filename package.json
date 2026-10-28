@@ -1,0 +1,70 @@
+{
+  "name": "doomsday-ready",
+  "private": true,
+  "type": "module",
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "scripts": {
+    "dev": "vite dev --port 3000",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
+    "preview": "vite preview",
+    "typecheck": "tsr generate && tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "smoke": "node scripts/smoke.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx scripts/migrate.ts",
+    "generate-routes": "tsr generate"
+  },
+  "dependencies": {
+    "@electric-sql/pglite": "^0.5.12",
+    "@fontsource/archivo": "^5.3.0",
+    "@fontsource/bangers": "^5.3.0",
+    "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-devtools": "0.10.13",
+    "@tanstack/react-query": "^5.105.0",
+    "@tanstack/react-router": "1.170.46",
+    "@tanstack/react-router-devtools": "1.167.2",
+    "@tanstack/react-router-ssr-query": "^1.167.3",
+    "@tanstack/react-start": "1.169.4",
+    "better-auth": "^1.7.14",
+    "canvas-confetti": "^1.9.4",
+    "drizzle-orm": "^0.45.4",
+    "motion": "^14.7.1",
+    "nitro": "3.0.260610-beta",
+    "postgres": "^3.4.9",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.1.18",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@neon/config": "^1.9.5",
+    "@tanstack/devtools-vite": "0.8.5",
+    "@tanstack/router-cli": "^1.132.0",
+    "@types/canvas-confetti": "^1.9.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^6.0.1",
+    "drizzle-kit": "^0.31.11",
+    "playwright": "1.63.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.0",
+    "vitest": "^5.0.5"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "lightningcss"
+    ]
+  },
+  "version": "0.1.0",
+  "description": "Get ready for Avengers: Doomsday. Watch tracks, randomised readiness quizzes and leaderboards. TanStack Start, full TypeScript.",
+  "engines": {
+    "node": ">=20"
+  }
+}
