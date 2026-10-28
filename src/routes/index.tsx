@@ -61,7 +61,7 @@ function Landing() {
     <main className="overflow-hidden">
       {/* ── HERO ── */}
       <section className="halftone-light border-b-4 border-ink bg-hero-red">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-12 px-4 pb-20 pt-14">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-12 px-4 pb-20 pt-10 sm:pt-14">
           <div className="min-w-0 flex-[999_1_540px]">
             <div className="anim-pop inline-flex -rotate-2 items-center gap-2 border-4 border-ink bg-pow px-3.5 py-1.5 text-[15px] font-black uppercase shadow-[5px_5px_0_#111]">
               <Icon name="ticket" size={18} /> In cinemas December 18, 2026
@@ -138,8 +138,8 @@ function Landing() {
       {/* ── TOOLKIT ── */}
       <section className="border-b-4 border-ink">
         <div className="mx-auto max-w-7xl px-4 py-16">
-          <h2 className="font-display m-0 text-6xl">YOUR HERO TOOLKIT</h2>
-          <div className="mt-7 grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(240px,1fr))]">
+          <h2 className="font-display m-0 text-5xl sm:text-6xl">YOUR HERO TOOLKIT</h2>
+          <div className="mt-7 grid gap-5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr))]">
             {TOOLKIT.map((f, i) => (
               <motion.div
                 key={f.title}
@@ -165,8 +165,8 @@ function Landing() {
       {/* ── HOW IT WORKS ── */}
       <section className="halftone">
         <div className="mx-auto max-w-7xl px-4 py-[72px]">
-          <h2 className="font-display m-0 text-6xl">HOW IT WORKS</h2>
-          <div className="mt-8 grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+          <h2 className="font-display m-0 text-5xl sm:text-6xl">HOW IT WORKS</h2>
+          <div className="mt-8 grid gap-7 [grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))]">
             {STEPS.map((s) => (
               <article key={s.n} className={`panel lift relative p-7 ${s.bg}`}>
                 <Icon name={s.icon} size={52} strokeWidth={2.2} className="ico absolute right-4 top-4" />
@@ -184,14 +184,14 @@ function Landing() {
       <section className="halftone-light border-y-4 border-ink bg-deep">
         <div className="mx-auto max-w-7xl px-4 py-[72px]">
           <div className="flex flex-wrap items-end justify-between gap-4">
-            <h2 className="font-display m-0 text-6xl text-paper" style={{ textShadow: '4px 4px 0 #111' }}>
+            <h2 className="font-display m-0 text-5xl sm:text-6xl text-paper" style={{ textShadow: '4px 4px 0 #111' }}>
               CHOOSE YOUR MISSION
             </h2>
             <Link to="/tracks" className="flex items-center gap-1.5 font-black uppercase text-pow">
               See all tracks <Icon name="arrowRight" size={18} />
             </Link>
           </div>
-          <div className="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(260px,1fr))]">
+          <div className="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))]">
             {TRACKS.map((t) => (
               <Link key={t.id} to="/tracks/$trackId" params={{ trackId: t.id }} className="panel lift flex flex-col bg-paper text-ink no-underline">
                 <div className="font-display flex items-center gap-3 border-b-4 border-ink px-4 py-3.5 text-[2.1rem]" style={{ background: t.color }}>
@@ -220,18 +220,18 @@ function Landing() {
         <div className="mx-auto max-w-7xl px-4 py-16">
           <div className="flex flex-wrap items-start gap-10">
             <div className="min-w-0 flex-[1_1_440px]">
-              <h2 className="font-display m-0 text-6xl">THE TRAILER</h2>
+              <h2 className="font-display m-0 text-5xl sm:text-6xl">THE TRAILER</h2>
               <p className="mb-5 mt-1 text-lg font-semibold">Avengers: Doomsday, in cinemas December 18.</p>
               <TrailerPlayer titleId="doomsday" name="Avengers: Doomsday" />
             </div>
             <div className="min-w-0 flex-[1_1_400px]">
               <div className="flex items-end justify-between gap-3">
-                <h2 className="font-display m-0 text-6xl">LATEST NEWS</h2>
+                <h2 className="font-display m-0 text-5xl sm:text-6xl">LATEST NEWS</h2>
                 <Link to="/news" className="flex items-center gap-1.5 pb-2 font-black uppercase text-hero-red">
                   All news <Icon name="arrowRight" size={18} />
                 </Link>
               </div>
-              <div className="mt-5 grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(220px,1fr))]">
+              <div className="mt-5 grid gap-5 [grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr))]">
                 {(news?.items ?? []).slice(0, 2).map((n) => (
                   <NewsCard key={n.id} item={n} compact />
                 ))}
@@ -268,7 +268,7 @@ function Landing() {
       <section className="border-b-4 border-ink bg-pow">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-10 px-4 py-16">
           <div className="min-w-0 flex-[999_1_460px]">
-            <h2 className="font-display m-0 flex items-center gap-4 text-6xl">
+            <h2 className="font-display m-0 flex items-center gap-4 text-5xl sm:text-6xl">
               <Icon name="trophy" size={64} fill="#FFF4DC" strokeWidth={2} className="anim-wobble" /> TOP AGENTS
             </h2>
             <p className="max-w-lg text-lg font-semibold">XP stacks from watching, quizzing and passing the exam. Claim your spot before December 18.</p>

@@ -1,0 +1,23 @@
+{
+  "id": "/",
+  "name": "Doomsday Ready",
+  "short_name": "Doomsday",
+  "description": "Pick a watch track, tick off the MCU, and prove you're ready for Avengers: Doomsday.",
+  "start_url": "/?source=pwa",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#111111",
+  "theme_color": "#111111",
+  "categories": ["entertainment", "games"],
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Take the quiz", "url": "/quiz", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Characters", "url": "/characters", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Leaderboard", "url": "/leaderboard", "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

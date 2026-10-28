@@ -31,15 +31,15 @@ function QuizHub() {
 
   return (
     <main className="halftone-dark min-h-[80vh] bg-ink text-paper">
-      <div className="mx-auto max-w-7xl px-4 pb-20 pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:pt-14">
         <div className="flex items-center gap-2 text-[13px] font-black tracking-[0.15em] text-pow">
           <Icon name="bolt" size={16} /> {counts?.total ?? '…'} QUESTIONS IN THE ARCHIVE
         </div>
-        <h1 className="font-display m-0 mt-1 text-[clamp(56px,7vw,96px)] leading-[0.95]">
+        <h1 className="font-display m-0 mt-1 text-[clamp(40px,11vw,96px)] leading-[0.95]">
           PROVE <span className="text-pow">IT.</span>
         </h1>
 
-        <div className="mt-10 grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+        <div className="mt-10 grid gap-8 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
           <section className="relative border-4 border-paper bg-hero-red p-7 shadow-[10px_10px_0_#FFD23F]">
             {ready && (
               <span className="font-display absolute -right-3 -top-5 rotate-6 border-4 border-ink bg-win px-3 py-1 text-2xl text-paper shadow-[4px_4px_0_#111]">READY ✓</span>
@@ -108,7 +108,7 @@ function QuizHub() {
             <Icon name="film" size={40} className="text-pow" /> TITLE QUIZZES
           </h2>
           <p className="font-semibold">Five quick questions on one title. Titles you’ve watched come first.</p>
-          <div className="mt-5 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
+          <div className="mt-5 grid gap-4 [grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))]">
             {titleQuizzes.map((t) => (
               <button
                 key={t.id}

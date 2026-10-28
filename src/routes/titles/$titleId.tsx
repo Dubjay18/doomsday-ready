@@ -49,13 +49,13 @@ function TitlePage() {
   return (
     <main>
       <section className="halftone border-b-4 border-ink" style={{ backgroundColor: title.color }}>
-        <div className="mx-auto flex max-w-7xl flex-wrap items-end gap-8 px-4 py-12">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-end gap-5 px-4 py-8 sm:gap-8 sm:py-12">
           {watch?.posterUrl ? (
             <img src={watch.posterUrl} alt={`${title.name} poster`} className="w-40 border-4 border-ink shadow-[8px_8px_0_#111]" />
           ) : (
-            trailerThumb(titleId, 'md') && <img src={trailerThumb(titleId, 'md')!} alt={`${title.name} preview`} className="aspect-video w-64 border-4 border-ink object-cover shadow-[8px_8px_0_#111]" />
+            trailerThumb(titleId, 'md') && <img src={trailerThumb(titleId, 'md')!} alt={`${title.name} preview`} className="aspect-video w-full max-w-64 border-4 border-ink object-cover shadow-[8px_8px_0_#111]" />
           )}
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0 basis-full sm:flex-1 sm:basis-0">
             <div className="flex flex-wrap gap-2">
               <Chip icon={title.kind === 'film' ? 'film' : 'tv'} dark>
                 {title.kind.toUpperCase()}
@@ -66,7 +66,7 @@ function TitlePage() {
               {title.universe === 'sony' && <Chip icon="rings">SONY UNIVERSE</Chip>}
               {title.phase && <Chip icon="layers">PHASE {title.phase}</Chip>}
             </div>
-            <h1 className="font-display ink-stroke m-0 mt-3 text-[clamp(48px,6vw,84px)] leading-[0.95] text-paper" style={{ textShadow: '5px 5px 0 #111' }}>
+            <h1 className="font-display ink-stroke m-0 mt-3 text-[clamp(36px,9vw,84px)] leading-[0.95] text-paper" style={{ textShadow: '5px 5px 0 #111' }}>
               {title.name}
             </h1>
           </div>
@@ -82,7 +82,7 @@ function TitlePage() {
         </section>
       )}
 
-      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 [grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr))]">
         <section className="panel bg-white p-6">
           <h2 className="font-display m-0 flex items-center gap-2.5 text-4xl">
             <Icon name="target" size={34} /> WHY IT MATTERS

@@ -17,9 +17,9 @@ function NewsPage() {
 
   return (
     <main className="halftone min-h-[80vh]">
-      <div className="mx-auto max-w-7xl px-4 pb-20 pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:pt-14">
         <div className="text-sm font-black uppercase tracking-[0.15em] text-hero-red">Straight from the multiverse</div>
-        <h1 className="font-display m-0 mt-1 text-[clamp(56px,7vw,96px)] leading-[0.95]">
+        <h1 className="font-display m-0 mt-1 text-[clamp(40px,11vw,96px)] leading-[0.95]">
           MCU <span className="ink-stroke text-hero-red" style={{ WebkitTextStroke: '2px #111' }}>NEWS</span>
         </h1>
         <p className="mt-3 max-w-2xl text-lg font-semibold">
@@ -59,7 +59,7 @@ function NewsPage() {
           </a>
         )}
 
-        <div className="mt-10 grid gap-7 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
+        <div className="mt-10 grid gap-7 [grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
           {rest.map((i) => (
             <NewsCard key={i.id} item={i} />
           ))}

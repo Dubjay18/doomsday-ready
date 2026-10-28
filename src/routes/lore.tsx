@@ -26,9 +26,9 @@ function LorePage() {
 
   return (
     <main className="halftone min-h-[80vh]">
-      <div className="mx-auto max-w-5xl px-4 pb-20 pt-14">
+      <div className="mx-auto max-w-5xl px-4 pb-20 pt-10 sm:pt-14">
         <div className="text-sm font-black uppercase tracking-[0.15em] text-hero-red">Things people will assume you know</div>
-        <h1 className="font-display m-0 mt-1 text-[clamp(56px,7vw,96px)] leading-[0.95]">
+        <h1 className="font-display m-0 mt-1 text-[clamp(40px,11vw,96px)] leading-[0.95]">
           KNOW YOUR <span className="ink-stroke text-hero-red" style={{ WebkitTextStroke: '2px #111' }}>MCU</span>
         </h1>
         <p className="mt-3 max-w-2xl text-lg font-semibold">

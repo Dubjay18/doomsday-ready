@@ -114,7 +114,7 @@ function Watchlist() {
 
         {shown.length === 0 && <p className="text-lg font-bold">Nothing here. Try another filter.</p>}
 
-        <motion.div layout className="grid gap-7 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
+        <motion.div layout className="grid gap-7 [grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr))]">
           <AnimatePresence>
             {shown.map((t) => (
               <TitleCard

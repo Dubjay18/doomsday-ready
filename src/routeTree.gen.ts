@@ -18,6 +18,7 @@ import { Route as MeRouteImport } from './routes/me'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as PhasesRouteImport } from './routes/phases'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
+import { Route as ApiNewsRouteImport } from './routes/api/news'
 import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as QuizSessionIdRouteImport } from './routes/quiz/$sessionId'
 import { Route as ResultSessionIdRouteImport } from './routes/result/$sessionId'
@@ -71,6 +72,11 @@ const ApiHealthRoute = ApiHealthRouteImport.update({
   path: '/api/health',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiNewsRoute = ApiNewsRouteImport.update({
+  id: '/api/news',
+  path: '/api/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizIndexRoute = QuizIndexRouteImport.update({
   id: '/quiz/',
   path: '/quiz/',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/news': typeof NewsRoute
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/news': typeof ApiNewsRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -135,6 +142,7 @@ export interface FileRoutesByTo {
   '/news': typeof NewsRoute
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/news': typeof ApiNewsRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/news': typeof NewsRoute
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
+  '/api/news': typeof ApiNewsRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/phases'
     | '/api/health'
+    | '/api/news'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/phases'
     | '/api/health'
+    | '/api/news'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -210,6 +221,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/phases'
     | '/api/health'
+    | '/api/news'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -229,6 +241,7 @@ export interface RootRouteChildren {
   NewsRoute: typeof NewsRoute
   PhasesRoute: typeof PhasesRoute
   ApiHealthRoute: typeof ApiHealthRoute
+  ApiNewsRoute: typeof ApiNewsRoute
   QuizSessionIdRoute: typeof QuizSessionIdRoute
   ResultSessionIdRoute: typeof ResultSessionIdRoute
   TitlesTitleIdRoute: typeof TitlesTitleIdRoute
@@ -303,6 +316,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiHealthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/news': {
+      id: '/api/news'
+      path: '/api/news'
+      fullPath: '/api/news'
+      preLoaderRoute: typeof ApiNewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz/': {
       id: '/quiz/'
       path: '/quiz'
@@ -365,6 +385,7 @@ const rootRouteChildren: RootRouteChildren = {
   NewsRoute: NewsRoute,
   PhasesRoute: PhasesRoute,
   ApiHealthRoute: ApiHealthRoute,
+  ApiNewsRoute: ApiNewsRoute,
   QuizSessionIdRoute: QuizSessionIdRoute,
   ResultSessionIdRoute: ResultSessionIdRoute,
   TitlesTitleIdRoute: TitlesTitleIdRoute,

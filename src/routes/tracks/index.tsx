@@ -38,9 +38,9 @@ function TracksPage() {
 
   return (
     <main className="halftone min-h-[80vh]">
-      <div className="mx-auto max-w-7xl px-4 pb-20 pt-14">
+      <div className="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:pt-14">
         <div className="text-sm font-black uppercase tracking-[0.15em] text-hero-red">Step 1 of 3 · Choose your mission</div>
-        <h1 className="font-display m-0 mt-1 text-[clamp(56px,7vw,96px)] leading-[0.95]">
+        <h1 className="font-display m-0 mt-1 text-[clamp(40px,11vw,96px)] leading-[0.95]">
           PICK YOUR <span className="ink-stroke text-hero-red" style={{ WebkitTextStroke: '2px #111' }}>TRACK</span>
         </h1>
         <p className="mt-3 max-w-2xl text-lg font-semibold">
@@ -48,7 +48,7 @@ function TracksPage() {
         </p>
 
         <div className="mt-10 flex flex-wrap items-start gap-8">
-          <div className="grid min-w-0 flex-[999_1_560px] gap-6 [grid-template-columns:repeat(auto-fit,minmax(250px,1fr))]" role="radiogroup" aria-label="Tracks">
+          <div className="grid min-w-0 flex-[999_1_560px] gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr))]" role="radiogroup" aria-label="Tracks">
             {TRACKS.map((t) => {
               const on = t.id === picked
               const hrs = trackMinutes(t) / 60
@@ -62,14 +62,14 @@ function TracksPage() {
                   onClick={() => setPicked(t.id)}
                   className={cn('lift flex flex-col border-4 border-ink p-0 text-left text-ink transition-shadow', on ? 'scale-[1.02] bg-white shadow-[10px_10px_0_#C8102E]' : 'bg-paper shadow-[6px_6px_0_#111]')}
                 >
-                  <div className="flex w-full items-center justify-between border-b-4 border-ink px-4 py-3.5" style={{ background: t.color }}>
-                    <span className="font-display flex items-center gap-2.5 text-4xl">
+                  <div className="flex w-full items-center justify-between gap-2 border-b-4 border-ink px-3 py-3.5 sm:px-4" style={{ background: t.color }}>
+                    <span className="font-display flex min-w-0 items-center gap-2 text-3xl sm:gap-2.5 sm:text-4xl">
                       <span className="ico flex h-11 w-11 items-center justify-center rounded-full border-[3px] border-ink bg-paper">
                         <Icon name={trackIcon[t.icon]} size={24} strokeWidth={2.4} />
                       </span>
                       {t.name.toUpperCase()}
                     </span>
-                    <span className="bg-ink px-2 py-1 text-xs font-black tracking-wider text-paper">{t.level.toUpperCase()}</span>
+                    <span className="flex-none bg-ink px-2 py-1 text-xs font-black tracking-wider text-paper">{t.level.toUpperCase()}</span>
                   </div>
                   <div className="flex flex-col gap-3 p-4">
                     <div className="flex gap-5">

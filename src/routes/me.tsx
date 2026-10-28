@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState } from 'react'
 import { TRACK_BY_ID } from '../content/catalog'
 import type { TrackId } from '../content/catalog'
-import { Meter, btnClass, cn } from '../components/comic'
+import { Meter, btnClass } from '../components/comic'
+import { AlertsPanel } from '../components/AlertsPanel'
 import { Icon } from '../components/Icon'
 import { authClient } from '../lib/auth-client'
 import { meQuery } from '../lib/queries'
@@ -43,6 +44,9 @@ function MePage() {
         <Link to="/tracks" className={btnClass('yellow', 'lg')}>
           PICK A TRACK
         </Link>
+        <div className="w-full max-w-xl text-left">
+          <AlertsPanel />
+        </div>
       </main>
     )
 
@@ -52,7 +56,7 @@ function MePage() {
 
   return (
     <main className="halftone min-h-[80vh]">
-      <div className="mx-auto max-w-5xl px-4 py-14">
+      <div className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
         <div className="panel flex flex-wrap items-center gap-6 bg-paper p-7">
           <span className="font-display flex h-24 w-24 items-center justify-center rounded-full border-4 border-ink bg-pow text-6xl shadow-[5px_5px_0_#111]">{me.user.name[0]?.toUpperCase()}</span>
           <div className="min-w-0 flex-1">
@@ -99,7 +103,7 @@ function MePage() {
           )}
         </div>
 
-        <div className="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(220px,1fr))]">
+        <div className="mt-8 grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))]">
           <Stat icon="star" label="TOTAL XP" value={s.totalXp.toLocaleString()} />
           <Stat icon="shield" label="RANK" value={s.rank} />
           <Stat icon="film" label="TITLES WATCHED" value={String(s.titlesWatched)} />
@@ -114,6 +118,10 @@ function MePage() {
           <div className="mt-2">
             <Meter value={toNext} label="Progress to next rank" />
           </div>
+        </div>
+
+        <div className="mt-8">
+          <AlertsPanel />
         </div>
 
         <div className="mt-8 flex flex-wrap gap-4">

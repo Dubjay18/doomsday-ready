@@ -50,7 +50,7 @@ function ResultPage() {
 
   return (
     <main className="sunburst min-h-[85vh]">
-      <div className="mx-auto flex max-w-5xl flex-col items-center px-4 pb-20 pt-14 text-center">
+      <div className="mx-auto flex max-w-5xl flex-col items-center px-4 pb-20 pt-10 sm:pt-14 text-center">
         <div className="flex items-center gap-2 bg-ink px-3.5 py-1.5 text-sm font-black tracking-[0.2em] text-pow">
           <Icon name="shieldCheck" size={18} />
           {r.mode === 'exam' ? 'THE VERDICT IS IN' : r.mode === 'daily' ? 'DAILY CHALLENGE RESULT' : `TITLE QUIZ · ${r.titleName?.toUpperCase()}`}
@@ -68,7 +68,7 @@ function ResultPage() {
         </motion.div>
         <p className="mt-6 max-w-xl text-xl font-bold">{r.mode === 'exam' ? r.line : 'Title and daily quizzes earn XP. Only the Readiness Exam awards the READY badge.'}</p>
 
-        <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 grid w-full gap-6 [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))]">
+        <motion.div initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.5 }} className="mt-8 grid w-full gap-6 [grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))]">
           <Tile icon="target" value={`${r.pct}%`} label={`${r.correct} / ${r.total} CORRECT`} sub={r.mode === 'exam' ? 'Pass mark: 80%' : undefined} red />
           <Tile icon="bolt" value={`+${r.sessionXp.toLocaleString()}`} label="XP EARNED" sub={`Score ${r.score.toLocaleString()} · best combo ×${r.bestCombo}`} />
           <div className="flex flex-col items-center gap-1.5 border-4 border-ink bg-ink p-5 text-paper shadow-[8px_8px_0_#C8102E]">
@@ -84,7 +84,7 @@ function ResultPage() {
               <Icon name="alert" size={32} fill="#FFD23F" strokeWidth={2.2} /> YOUR WEAK SPOTS
             </h2>
             <p className="mb-4 mt-1 font-semibold">You missed questions from these titles. A rewatch (or a title quiz) will close the gap.</p>
-            <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(230px,1fr))]">
+            <div className="grid gap-3.5 [grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr))]">
               {r.weakSpots.map((w) => (
                 <Link key={w.titleId} to="/titles/$titleId" params={{ titleId: w.titleId }} className="lift border-[3px] border-ink bg-white p-3.5 text-ink no-underline">
                   <b className="flex items-center gap-1.5">

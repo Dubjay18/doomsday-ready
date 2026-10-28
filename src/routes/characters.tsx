@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Icon } from '../components/Icon'
 import { Chip, cn } from '../components/comic'
 
@@ -425,6 +425,28 @@ const CHARACTERS: Character[] = [
   },
 ]
 
+/** Portraits live in public/characters/<id>.jpg (see scripts/fetch-character-images.mjs). Missing ones fall back to a comic tile. */
+function Portrait({ char, className }: { char: Character; className?: string }) {
+  const [failed, setFailed] = useState(false)
+  const tone = char.universe === 'fox' ? 'bg-sky' : char.universe === 'fantastic-four' ? 'bg-blast' : 'bg-pow'
+  if (failed)
+    return (
+      <div className={cn('halftone flex items-center justify-center', tone, className)} role="img" aria-label={char.name}>
+        <span className="font-display text-7xl text-ink/80">{char.name.replace(/^(The|Doctor|Professor|Captain) /, '')[0]}</span>
+      </div>
+    )
+  return (
+    <img
+      src={`/characters/${char.id}.jpg`}
+      alt={`${char.actor} as ${char.name}`}
+      loading="lazy"
+      decoding="async"
+      onError={() => setFailed(true)}
+      className={cn('bg-ink/10 object-cover object-top', className)}
+    />
+  )
+}
+
 const UNIVERSES = [
   { id: 'all', label: 'ALL' },
   { id: 'mcu', label: 'MCU' },
@@ -436,27 +458,38 @@ export default function CharactersPage() {
   const [filter, setFilter] = useState('all')
   const [selected, setSelected] = useState<Character | null>(null)
 
+  useEffect(() => {
+    if (!selected) return
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setSelected(null)
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [selected])
+
   const filtered = filter === 'all' ? CHARACTERS : CHARACTERS.filter((c) => c.universe === filter)
 
   return (
     <main className="halftone min-h-[80vh]">
-      <section className="mx-auto max-w-7xl px-4 pb-12 pt-14">
+      <section className="mx-auto max-w-7xl px-4 pb-12 pt-10 sm:pt-14">
         <div className="text-sm font-black uppercase tracking-[0.15em] text-hero-red">From the Avengers: Doomsday Cast Reveal</div>
-        <h1 className="font-display m-0 mt-1 text-[clamp(48px,7vw,96px)] leading-[0.95]">
+        <h1 className="font-display m-0 mt-1 text-[clamp(40px,11vw,96px)] leading-[0.95]">
           DOOMSDAY <span className="ink-stroke text-hero-red" style={{ WebkitTextStroke: '2px #111' }}>CHARACTERS</span>
         </h1>
         <p className="mt-3 max-w-3xl text-lg font-semibold">
           All confirmed characters from the Avengers: Doomsday cast. Origin stories, first appearances, greatest feats, and more.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center gap-2.5">
+        <div className="mt-8 flex flex-wrap items-center gap-2 sm:gap-2.5">
           {UNIVERSES.map((u) => (
             <button
               key={u.id}
               type="button"
               onClick={() => setFilter(u.id)}
               className={cn(
-                'flex items-center gap-2 border-[3px] border-ink px-3.5 py-2 text-sm font-black tracking-wide transition-transform hover:-translate-y-0.5',
+                'flex items-center gap-2 border-[3px] border-ink px-3 py-2 text-xs font-black tracking-wide transition-transform sm:px-3.5 sm:text-sm hover:-translate-y-0.5',
                 filter === u.id ? 'bg-ink text-pow shadow-[4px_4px_0_#111]' : 'bg-paper text-ink shadow-[4px_4px_0_#111]',
               )}
             >
@@ -465,49 +498,61 @@ export default function CharactersPage() {
           ))}
         </div>
 
-        <div className="mt-10 grid gap-6 [grid-template-columns:repeat(auto-fill,minmax(280px,1fr))]">
+        <div className="mt-8 grid gap-5 sm:mt-10 sm:gap-6 [grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr))]">
           {filtered.map((char) => (
             <button
               key={char.id}
               type="button"
               onClick={() => setSelected(char)}
-              className="panel group relative overflow-hidden bg-white p-5 text-left transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0_#111]"
+              className="panel group relative flex flex-col overflow-hidden bg-white text-left transition-transform hover:-translate-y-1 hover:shadow-[8px_8px_0_#111]"
             >
-              <div className="flex items-start justify-between gap-3">
+              <div className="relative border-b-4 border-ink">
+                <Portrait char={char} className="aspect-square w-full sm:aspect-[4/5]" />
+                <span className="absolute right-2 top-2">
+                  <Chip icon={char.universe === 'fox' ? 'rings' : char.universe === 'fantastic-four' ? 'star' : 'users'} dark>
+                    {char.universe === 'fox' ? 'FOX' : char.universe === 'fantastic-four' ? 'FF' : 'MCU'}
+                  </Chip>
+                </span>
+              </div>
+              <div className="flex flex-1 flex-col p-4 sm:p-5">
+              <div>
                 <div>
                   <h2 className="font-display m-0 text-2xl leading-tight">{char.name}</h2>
                   {char.alias && <p className="m-0 mt-1 text-xs font-bold text-hero-red">{char.alias}</p>}
                   <p className="m-0 mt-1 text-xs font-semibold text-ink/70">{char.actor}</p>
                 </div>
-                <Chip icon={char.universe === 'fox' ? 'rings' : char.universe === 'fantastic-four' ? 'star' : 'users'} dark>
-                  {char.universe === 'fox' ? 'FOX' : char.universe === 'fantastic-four' ? 'FF' : 'MCU'}
-                </Chip>
               </div>
               <p className="mt-3 text-sm font-semibold leading-relaxed line-clamp-2">{char.originStory}</p>
-              <div className="mt-4 flex items-center gap-2 text-xs font-black uppercase tracking-wider text-ink/70">
+              <div className="mt-auto flex items-center gap-2 pt-4 text-xs font-black uppercase tracking-wider text-ink/70">
                 <Icon name="info" size={14} /> View Details
+              </div>
               </div>
             </button>
           ))}
         </div>
+        <p className="mt-10 text-xs font-semibold">
+          Cast portraits are free-licensed photos from Wikimedia Commons. Doomsday Ready is an unofficial fan project.
+        </p>
       </section>
 
       {selected && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-ink/80 p-4" onClick={() => setSelected(null)}>
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/80 sm:items-center sm:p-4" role="dialog" aria-modal="true" aria-label={selected.name} onClick={() => setSelected(null)}>
           <div
-            className="panel max-h-[90vh] w-full max-w-2xl overflow-y-auto bg-white p-6 shadow-[12px_12px_0_#C8102E]"
+            className="panel max-h-[92dvh] w-full max-w-2xl overflow-y-auto bg-white p-4 shadow-none sm:max-h-[90vh] sm:p-6 sm:shadow-[12px_12px_0_#C8102E]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4">
-              <div>
-                <h2 className="font-display m-0 text-4xl leading-none">{selected.name}</h2>
+              <Portrait char={selected} className="hidden h-36 w-28 flex-none border-4 border-ink shadow-[4px_4px_0_#111] min-[420px]:block sm:h-44 sm:w-36" />
+              <div className="min-w-0 flex-1">
+                <h2 className="font-display m-0 text-3xl leading-none sm:text-4xl">{selected.name}</h2>
                 {selected.alias && <p className="m-0 mt-2 text-lg font-black text-hero-red">{selected.alias}</p>}
                 <p className="m-0 mt-1 text-base font-bold">Portrayed by {selected.actor}</p>
               </div>
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="border-[3px] border-ink bg-hero-red p-2 text-paper shadow-[3px_3px_0_#111]"
+                className="flex-none border-[3px] border-ink bg-hero-red p-2 text-paper shadow-[3px_3px_0_#111]"
+                aria-label="Close"
               >
                 <Icon name="x" size={24} strokeWidth={3} />
               </button>

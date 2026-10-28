@@ -29,7 +29,7 @@ function PhasesPage() {
   return (
     <main>
       <section className="halftone-light border-b-4 border-ink bg-deep">
-        <div className="mx-auto max-w-7xl px-4 pb-14 pt-14">
+        <div className="mx-auto max-w-7xl px-4 pb-14 pt-10 sm:pt-14">
           <div className="text-sm font-black uppercase tracking-[0.15em] text-pow">Every Phase, one roadmap</div>
           <h1 className="font-display ink-stroke m-0 mt-1 text-[clamp(56px,7vw,100px)] leading-[0.95] text-paper" style={{ textShadow: '5px 5px 0 #111' }}>
             THE ROAD TO DOOMSDAY
@@ -129,7 +129,7 @@ function PhasesPage() {
                       </span>
                     </div>
                     <Meter value={(done / Math.max(ts.length, 1)) * 100} label={`Phase ${p.phase} progress`} />
-                    <ol className="m-0 mt-4 grid list-none gap-2.5 p-0 [grid-template-columns:repeat(auto-fill,minmax(250px,1fr))]">
+                    <ol className="m-0 mt-4 grid list-none gap-2.5 p-0 [grid-template-columns:repeat(auto-fill,minmax(min(100%,250px),1fr))]">
                       {ts.map((t) => (
                         <PhaseTitle key={t.id} title={t} watched={watched.has(t.id)} />
                       ))}

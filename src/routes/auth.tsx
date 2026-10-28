@@ -59,7 +59,7 @@ function AuthPage() {
 
   return (
     <main className="halftone min-h-[80vh]">
-      <div className="mx-auto max-w-xl px-4 py-14">
+      <div className="mx-auto max-w-xl px-4 py-10 sm:py-14">
         <div className="panel bg-paper p-7 shadow-[10px_10px_0_#111]">
           <div className="mb-5 flex border-4 border-ink" role="tablist">
             {(['signup', 'signin'] as const).map((m) => (
