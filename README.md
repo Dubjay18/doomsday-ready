@@ -7,7 +7,7 @@ Unofficial fan project. Not affiliated with or endorsed by Marvel Studios or Dis
 
 **Stack:** TanStack Start (React 19, server functions, Vite + Nitro) · TypeScript everywhere · Tailwind v4 · Motion · Drizzle + Postgres (PGlite locally) · Better Auth · Zod · Vitest + Playwright. One app, one deploy.
 
-Design canvas: https://claude.ai/artifact/FzQMxAsCmMNnTGCw8gaa6a · Architecture docs: [`docs/`](docs)
+Architecture docs: [`docs/`](docs)
 
 ---
 
