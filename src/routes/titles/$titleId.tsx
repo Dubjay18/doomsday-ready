@@ -131,35 +131,52 @@ function TitlePage() {
             </select>
           </label>
           {isLoading && <p className="font-bold">Scanning the multiverse…</p>}
-          {watch && watch.source === 'tmdb' && (
+          {watch && (
             <div className="mt-4 flex flex-col gap-4">
-              {(['stream', 'rent', 'buy'] as const).map((k) =>
-                watch[k].length ? (
-                  <div key={k}>
-                    <div className="mb-2 text-xs font-black tracking-[0.15em]">{k === 'stream' ? 'STREAM' : k.toUpperCase()}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {watch[k].map((p) => (
-                        <a key={p.id} href={watch.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 border-[3px] border-ink bg-white px-2.5 py-1.5 text-sm font-extrabold text-ink no-underline">
-                          {p.logo ? <img src={p.logo} alt="" className="h-6 w-6 border border-ink" /> : <Icon name="play" size={14} fill="#111" />}
-                          {p.name}
-                        </a>
-                      ))}
-                    </div>
+              {watch.custom && watch.custom.length > 0 && (
+                <div>
+                  <div className="mb-2 text-xs font-black tracking-[0.15em]">QUICK LINKS</div>
+                  <div className="flex flex-wrap gap-2">
+                    {watch.custom.map((c) => (
+                      <a key={c.name} href={c.url} target="_blank" rel="noreferrer" className="flex items-center gap-2 border-[3px] border-ink bg-white px-2.5 py-1.5 text-sm font-extrabold text-ink no-underline">
+                        {c.name}
+                      </a>
+                    ))}
                   </div>
-                ) : null,
+                  <p className="mt-2 text-xs font-semibold text-ink/70">Some of these sites may require login to access content.</p>
+                </div>
               )}
-              {!watch.stream.length && !watch.rent.length && !watch.buy.length && (
-                <p className="m-0 font-bold">Not available to stream, rent or buy in {watch.region} right now. Try another country.</p>
+              {watch.source === 'tmdb' && (
+                <>
+                  {(['stream', 'rent', 'buy'] as const).map((k) =>
+                    watch[k].length ? (
+                      <div key={k}>
+                        <div className="mb-2 text-xs font-black tracking-[0.15em]">{k === 'stream' ? 'STREAM' : k.toUpperCase()}</div>
+                        <div className="flex flex-wrap gap-2">
+                          {watch[k].map((p) => (
+                            <a key={p.id} href={watch.link} target="_blank" rel="noreferrer" className="flex items-center gap-2 border-[3px] border-ink bg-white px-2.5 py-1.5 text-sm font-extrabold text-ink no-underline">
+                              {p.logo ? <img src={p.logo} alt="" className="h-6 w-6 border border-ink" /> : <Icon name="play" size={14} fill="#111" />}
+                              {p.name}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null,
+                  )}
+                  {!watch.stream.length && !watch.rent.length && !watch.buy.length && !watch.custom?.length && (
+                    <p className="m-0 font-bold">Not available to stream, rent or buy in {watch.region} right now. Try another country.</p>
+                  )}
+                  <p className="m-0 text-xs font-semibold">Watch data by JustWatch, via TMDB.</p>
+                </>
               )}
-              <p className="m-0 text-xs font-semibold">Watch data by JustWatch, via TMDB.</p>
-            </div>
-          )}
-          {watch && watch.source === 'fallback' && (
-            <div className="mt-4">
-              <p className="mt-0 font-semibold">See every legal streaming, rental and purchase option for {watch.region} on JustWatch:</p>
-              <a href={watch.link} target="_blank" rel="noreferrer" className={btnClass('yellow')}>
-                <Icon name="external" size={20} /> FIND IT ON JUSTWATCH
-              </a>
+              {watch.source === 'fallback' && !watch.custom?.length && (
+                <div className="mt-4">
+                  <p className="mt-0 font-semibold">See every legal streaming, rental and purchase option for {watch.region} on JustWatch:</p>
+                  <a href={watch.link} target="_blank" rel="noreferrer" className={btnClass('yellow')}>
+                    <Icon name="external" size={20} /> FIND IT ON JUSTWATCH
+                  </a>
+                </div>
+              )}
             </div>
           )}
         </section>

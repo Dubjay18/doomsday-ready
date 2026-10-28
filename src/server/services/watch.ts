@@ -19,6 +19,7 @@ export interface WatchOptions {
   rent: Provider[]
   buy: Provider[]
   posterUrl: string | null
+  custom?: { name: string; url: string; logo: string | null }[]
 }
 
 const TTL = 12 * 60 * 60 * 1000
@@ -26,6 +27,14 @@ const cache = new Map<string, { at: number; value: WatchOptions }>()
 
 function justWatchSearch(region: string, name: string) {
   return `https://www.justwatch.com/${region.toLowerCase()}/search?q=${encodeURIComponent(name)}`
+}
+
+function getCustomLinks(name: string) {
+  const query = encodeURIComponent(name)
+  return [
+    { name: 'PopcornMovies', url: `https://popcornmovies.ac/search?q=${query}`, logo: null },
+    { name: 'Kokonow', url: `https://kokonow.app/explore/search/results?q=${query}`, logo: null },
+  ]
 }
 
 async function tmdb<T>(path: string, token: string): Promise<T> {
@@ -51,7 +60,8 @@ export async function getWatchOptions(titleId: string, region: string): Promise<
   const hit = cache.get(key)
   if (hit && Date.now() - hit.at < TTL) return hit.value
 
-  const fallback: WatchOptions = { region, source: 'fallback', link: justWatchSearch(region, title.name), stream: [], rent: [], buy: [], posterUrl: null }
+  const custom = getCustomLinks(title.name)
+  const fallback: WatchOptions = { region, source: 'fallback', link: justWatchSearch(region, title.name), stream: [], rent: [], buy: [], posterUrl: null, custom }
   const token = process.env.TMDB_READ_TOKEN
   if (!token) return fallback
 
@@ -63,7 +73,7 @@ export async function getWatchOptions(titleId: string, region: string): Promise<
       token,
     )
     const match = search.results[0]
-    if (!match) return fallback
+    if (!match) return { ...fallback, custom }
     const prov = await tmdb<TmdbProviders>(`/${isTv ? 'tv' : 'movie'}/${match.id}/watch/providers`, token)
     const r = prov.results[region]
     const value: WatchOptions = {
@@ -74,11 +84,12 @@ export async function getWatchOptions(titleId: string, region: string): Promise<
       rent: mapP(r?.rent),
       buy: mapP(r?.buy),
       posterUrl: match.poster_path ? `https://image.tmdb.org/t/p/w342${match.poster_path}` : null,
+      custom,
     }
     cache.set(key, { at: Date.now(), value })
     return value
   } catch {
-    return fallback
+    return { ...fallback, custom }
   }
 }
 

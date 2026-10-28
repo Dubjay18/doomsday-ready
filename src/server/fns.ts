@@ -147,3 +147,17 @@ export const postersFn = createServerFn({ method: 'GET' })
 export const newsFn = createServerFn({ method: 'GET' })
   .validator(z.object({ limit: z.number().int().min(1).max(60).optional() }))
   .handler(async ({ data }) => getNews(data.limit ?? 24))
+
+
+/* ── profile ────────────────────────────────────────── */
+
+export const updateProfile = createServerFn({ method: 'POST' })
+  .validator(z.object({ name: z.string().min(2).max(32).trim() }))
+  .handler(async ({ data }) => {
+    const u = await requireUser()
+    const db = await getDb()
+    const { user } = await import('../server/db/schema')
+    const { eq } = await import('drizzle-orm')
+    await db.update(user).set({ name: data.name, updatedAt: new Date() }).where(eq(user.id, u.id))
+    return { ok: true, name: data.name }
+  })

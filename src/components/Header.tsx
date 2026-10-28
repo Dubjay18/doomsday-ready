@@ -5,10 +5,11 @@ import { Logo } from './comic'
 import { Icon } from './Icon'
 import type { IconName } from './Icon'
 
-const NAV: { to: '/tracks' | '/phases' | '/news' | '/lore' | '/quiz' | '/leaderboard'; label: string; icon: IconName }[] = [
+const NAV: { to: '/tracks' | '/phases' | '/news' | '/lore' | '/quiz' | '/leaderboard' | '/characters'; label: string; icon: IconName }[] = [
   { to: '/tracks', label: 'Tracks', icon: 'film' },
   { to: '/phases', label: 'Phases', icon: 'layers' },
   { to: '/news', label: 'News', icon: 'alert' },
+  { to: '/characters', label: 'Characters', icon: 'users' },
   { to: '/lore', label: 'Lore', icon: 'bulb' },
   { to: '/quiz', label: 'Quiz', icon: 'bolt' },
   { to: '/leaderboard', label: 'Leaderboard', icon: 'trophy' },

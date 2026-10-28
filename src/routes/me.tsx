@@ -1,11 +1,14 @@
 import { Link, createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useState } from 'react'
 import { TRACK_BY_ID } from '../content/catalog'
 import type { TrackId } from '../content/catalog'
-import { Meter, btnClass } from '../components/comic'
+import { Meter, btnClass, cn } from '../components/comic'
 import { Icon } from '../components/Icon'
 import { authClient } from '../lib/auth-client'
 import { meQuery } from '../lib/queries'
+import { updateProfile } from '../server/fns'
+import { useToast } from '../lib/toast'
 
 export const Route = createFileRoute('/me')({
   head: () => ({ meta: [{ title: 'Your file · Doomsday Ready' }] }),
@@ -16,6 +19,21 @@ function MePage() {
   const { data: me } = useQuery(meQuery)
   const qc = useQueryClient()
   const navigate = useNavigate()
+  const [editing, setEditing] = useState(false)
+  const [name, setName] = useState(me?.user?.name ?? '')
+
+  const toast = useToast()
+  const updateName = useMutation({
+    mutationFn: (newName: string) => updateProfile({ data: { name: newName } }),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: ['me'] })
+      toast({ text: 'Username updated', icon: 'check', tone: 'yellow' })
+      setEditing(false)
+    },
+    onError: (err) => {
+      toast({ text: (err as Error).message || 'Failed to update', icon: 'x', tone: 'red' })
+    },
+  })
 
   if (!me?.user || !me.stats)
     return (
@@ -39,7 +57,37 @@ function MePage() {
           <span className="font-display flex h-24 w-24 items-center justify-center rounded-full border-4 border-ink bg-pow text-6xl shadow-[5px_5px_0_#111]">{me.user.name[0]?.toUpperCase()}</span>
           <div className="min-w-0 flex-1">
             <div className="text-sm font-black tracking-[0.15em] text-hero-red">{me.user.isAnonymous ? 'GUEST AGENT' : 'AGENT FILE'}</div>
-            <h1 className="font-display m-0 text-6xl">{me.user.name}</h1>
+            {editing ? (
+              <form
+                className="mt-2 flex flex-wrap items-center gap-2"
+                onSubmit={(e) => {
+                  e.preventDefault()
+                  if (name.trim().length >= 2) updateName.mutate(name.trim())
+                }}
+              >
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  minLength={2}
+                  maxLength={32}
+                  className="border-[3px] border-ink px-3 py-2 font-display text-4xl"
+                  autoFocus
+                />
+                <button type="submit" disabled={updateName.isPending} className={btnClass('yellow')}>
+                  <Icon name="check" size={18} /> SAVE
+                </button>
+                <button type="button" onClick={() => { setEditing(false); setName(me.user.name) }} className={btnClass('paper')}>
+                  CANCEL
+                </button>
+              </form>
+            ) : (
+              <div className="flex items-center gap-3">
+                <h1 className="font-display m-0 text-6xl">{me.user.name}</h1>
+                <button type="button" onClick={() => setEditing(true)} className="border-2 border-ink p-1.5 hover:bg-ink hover:text-paper">
+                  <Icon name="pencil" size={18} />
+                </button>
+              </div>
+            )}
             {me.user.email && <div className="font-semibold">{me.user.email}</div>}
           </div>
           {s.readyAt ? (

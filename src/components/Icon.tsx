@@ -36,6 +36,7 @@ const paths = {
   logout: 'M15 3h6v18h-6 M10 17l-5-5 5-5 M5 12h12',
   external: 'M14 3h7v7 M21 3l-9 9 M19 14v7H3V5h7',
   x: 'M6 6l12 12 M18 6L6 18',
+  pencil: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z',
 } as const
 
 export type IconName = keyof typeof paths

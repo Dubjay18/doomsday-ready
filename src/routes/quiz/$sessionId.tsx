@@ -230,24 +230,26 @@ function QuizPlay() {
           {question?.options.map((o, i) => {
             const isAnswer = feedback && o.id === feedback.correctOption
             const isWrongPick = feedback && picked === o.id && !feedback.correct
+            const submittingThis = phase === 'submitting' && picked === o.id
             return (
               <motion.button
                 key={`${question.index}-${o.id}`}
                 type="button"
-                disabled={phase !== 'question' || o.hidden}
+                disabled={phase !== 'question' || o.hidden || phase === 'submitting'}
                 onClick={() => submit(o.id)}
                 initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: o.hidden ? 0.25 : 1, y: 0, x: isWrongPick ? [0, -10, 10, -6, 6, 0] : 0 }}
+                animate={{ opacity: o.hidden ? 0.25 : submittingThis ? 0.7 : 1, y: 0, x: isWrongPick ? [0, -10, 10, -6, 6, 0] : 0 }}
                 transition={{ delay: phase === 'question' ? i * 0.05 : 0 }}
                 className={cn(
                   'flex items-center gap-4 border-4 border-paper px-5 py-4 text-left shadow-[6px_6px_0_#FFF4DC] transition-colors',
                   phase === 'question' && !o.hidden && 'cursor-pointer hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-[9px_9px_0_#FFD23F]',
+                  submittingThis && 'cursor-wait',
                   isAnswer ? 'bg-win text-paper' : isWrongPick ? 'bg-hero-red text-paper' : 'bg-ink text-paper',
                   o.hidden && 'line-through',
                 )}
               >
                 <span className="font-display flex h-11 w-11 flex-none items-center justify-center border-[3px] border-current text-3xl">
-                  {isAnswer ? <Icon name="check" size={26} strokeWidth={3.2} /> : isWrongPick ? <Icon name="x" size={26} strokeWidth={3.2} /> : KEYS[i]}
+                  {submittingThis ? <span className="h-5 w-5 animate-spin border-2 border-current border-t-transparent" /> : isAnswer ? <Icon name="check" size={26} strokeWidth={3.2} /> : isWrongPick ? <Icon name="x" size={26} strokeWidth={3.2} /> : KEYS[i]}
                 </span>
                 <span className="text-lg font-extrabold">{o.label}</span>
               </motion.button>
@@ -284,6 +286,12 @@ function QuizPlay() {
             >
               {feedback?.finished ? 'SEE MY VERDICT' : 'NEXT QUESTION'} <Icon name="arrowRight" size={26} />
             </motion.button>
+          )}
+          {phase === 'submitting' && (
+            <div className="flex items-center gap-3 font-black text-pow">
+              <span className="h-6 w-6 animate-spin border-[3px] border-pow border-t-transparent" />
+              CHECKING ANSWER...
+            </div>
           )}
         </div>
 
