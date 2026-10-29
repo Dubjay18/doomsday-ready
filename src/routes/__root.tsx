@@ -2,6 +2,7 @@ import { HeadContent, Scripts, createRootRouteWithContext } from '@tanstack/reac
 import type { QueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import { MotionConfig } from 'motion/react'
+import { Analytics } from '@vercel/analytics/react'
 import appCss from '../styles.css?url'
 import { Footer, Header } from '../components/Header'
 import { PwaBoot } from '../components/PwaBoot'
@@ -77,6 +78,7 @@ function RootDocument({ children }: { children: ReactNode }) {
             <Footer />
           </ToastProvider>
         </MotionConfig>
+        <Analytics />
         <Scripts />
       </body>
     </html>
