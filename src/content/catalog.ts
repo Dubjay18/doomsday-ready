@@ -158,7 +158,7 @@ export const TRACKS: Track[] = [
     id: 'essentials', name: 'Essentials', level: 'Fan', color: '#4FC3F7', icon: 'star',
     blurb: 'The main road through the Infinity and Multiverse Sagas.',
     brief: 'Every title that sets up Doomsday characters: the Avengers, the Thunderbolts, Wakanda, the Fantastic Four and the Fox X-Men (the original actors are in the Doomsday cast).',
-    titleIds: byRelease(['x-men', 'x2', 'x-men-the-last-stand', 'x-men-first-class', 'x-men-days-of-future-past', 'logan', 'spider-man-no-way-home', 'doctor-strange-multiverse-of-madness', 'captain-america-the-first-avenger', 'the-avengers', 'captain-america-the-winter-soldier', 'ant-man', 'captain-america-civil-war', 'thor-ragnarok', 'black-panther', 'avengers-infinity-war', 'avengers-endgame', 'falcon-and-the-winter-soldier', 'loki-s1', 'shang-chi', 'black-panther-wakanda-forever', 'loki-s2', 'ant-man-quantumania', 'deadpool-and-wolverine', 'captain-america-brave-new-world', 'thunderbolts', 'fantastic-four-first-steps', 'spider-man-brand-new-day']),
+    titleIds: byRelease(['x-men', 'x2', 'x-men-the-last-stand', 'x-men-first-class', 'x-men-days-of-future-past', 'logan', 'spider-man-no-way-home', 'doctor-strange-multiverse-of-madness', 'captain-america-the-first-avenger', 'the-avengers', 'captain-america-the-winter-soldier', 'ant-man', 'captain-america-civil-war', 'thor-ragnarok', 'black-panther', 'avengers-infinity-war', 'avengers-endgame', 'black-widow', 'falcon-and-the-winter-soldier', 'loki-s1', 'shang-chi', 'black-panther-wakanda-forever', 'loki-s2', 'ant-man-quantumania', 'deadpool-and-wolverine', 'captain-america-brave-new-world', 'thunderbolts', 'fantastic-four-first-steps', 'spider-man-brand-new-day']),
     optional: ['x-men-first-class', 'logan'],
   },
   {
