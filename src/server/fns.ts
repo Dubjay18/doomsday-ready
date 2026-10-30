@@ -85,7 +85,7 @@ export const startQuizFn = createServerFn({ method: 'POST' })
   .validator(z.object({ mode: z.enum(['exam', 'title', 'daily']), titleId: z.string().optional() }))
   .handler(async ({ data }) => {
     const u = await requireUser()
-    return startQuiz(u.id, data.mode, data.titleId)
+    return startQuiz(u.id, data.mode, u.isAnonymous, data.titleId)
   })
 
 const sessionInput = z.object({ sessionId: z.uuid() })

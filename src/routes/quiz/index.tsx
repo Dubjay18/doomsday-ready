@@ -81,7 +81,16 @@ function QuizHub() {
           </section>
         </div>
 
-        {start.isError && <p className="mt-4 font-bold text-pow">{(start.error as Error).message}</p>}
+        {start.isError && (
+          <div className="mt-4 flex flex-wrap items-center gap-4 border-4 border-paper bg-ink/40 p-4">
+            <p className="m-0 font-bold text-pow">{(start.error as Error).message}</p>
+            {(start.error as Error).message.toLowerCase().includes('sign in') && (
+              <Link to="/auth" search={{ mode: 'signup' }} className={btnClass('yellow')}>
+                <Icon name="shieldCheck" size={20} /> SIGN IN
+              </Link>
+            )}
+          </div>
+        )}
 
         {recent && recent.length > 0 && (
           <section className="mt-12">

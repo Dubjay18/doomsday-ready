@@ -68,27 +68,27 @@ describe('progress & XP ledger', () => {
 
 describe('quiz sessions', () => {
   it('never exposes the answer in the client payload', async () => {
-    const { sessionId } = await quiz.startQuiz('alice', 'exam')
+    const { sessionId } = await quiz.startQuiz('alice', 'exam', false)
     const s = await quiz.getQuizState('alice', sessionId)
     expect(JSON.stringify(s)).not.toMatch(/"answer"|isCorrect|explanation/)
     expect(s.question?.options).toHaveLength(4)
   })
 
   it('rejects a double submit for the same question', async () => {
-    const { sessionId } = await quiz.startQuiz('alice', 'title', 'avengers-endgame')
+    const { sessionId } = await quiz.startQuiz('alice', 'title', false, 'avengers-endgame')
     const s = await quiz.getQuizState('alice', sessionId)
     await quiz.answerQuestion('alice', sessionId, s.cursor, 0)
     await expect(quiz.answerQuestion('alice', sessionId, s.cursor, 1)).rejects.toMatchObject({ code: 'CONFLICT' })
   })
 
   it("won't let one user read or answer another user's session", async () => {
-    const { sessionId } = await quiz.startQuiz('alice', 'title', 'black-panther')
+    const { sessionId } = await quiz.startQuiz('alice', 'title', false, 'black-panther')
     await expect(quiz.getQuizState('bob', sessionId)).rejects.toMatchObject({ code: 'NOT_FOUND' })
     await expect(quiz.answerQuestion('bob', sessionId, 0, 0)).rejects.toMatchObject({ code: 'NOT_FOUND' })
   })
 
   it('grades a question as a timeout when the server clock ran out', async () => {
-    const { sessionId } = await quiz.startQuiz('bob', 'title', 'thor')
+    const { sessionId } = await quiz.startQuiz('bob', 'title', false, 'thor')
     await quiz.getQuizState('bob', sessionId) // serves Q1
     const db = await getDb()
     await db.update(schema.quizSessions).set({ servedAt: sql`now() - interval '60 seconds'` }).where(eq(schema.quizSessions.id, sessionId))
@@ -101,7 +101,7 @@ describe('quiz sessions', () => {
 
   it('a perfect exam makes you READY and awards the READY bonus only once', async () => {
     for (let round = 0; round < 2; round++) {
-      const { sessionId } = await quiz.startQuiz('bob', 'exam')
+      const { sessionId } = await quiz.startQuiz('bob', 'exam', false)
       for (let i = 0; i < 20; i++) await answerCurrent('bob', sessionId, true)
       const r = await quiz.getQuizResult('bob', sessionId)
       expect(r.ready).toBe(true)
@@ -118,21 +118,44 @@ describe('quiz sessions', () => {
       [15, false],
       [16, true],
     ] as const) {
-      const { sessionId } = await quiz.startQuiz('carol', 'exam')
+      const { sessionId } = await quiz.startQuiz('carol', 'exam', false)
       for (let i = 0; i < 20; i++) await answerCurrent('carol', sessionId, i < right)
       expect((await quiz.getQuizResult('carol', sessionId)).ready).toBe(ready)
     }
   })
 
   it('daily challenge: same questions for everyone, one attempt each', async () => {
-    const a = await quiz.startQuiz('alice', 'daily')
-    const b = await quiz.startQuiz('bob', 'daily')
-    const again = await quiz.startQuiz('alice', 'daily')
+    const a = await quiz.startQuiz('alice', 'daily', false)
+    const b = await quiz.startQuiz('bob', 'daily', false)
+    const again = await quiz.startQuiz('alice', 'daily', false)
     expect(again.sessionId).toBe(a.sessionId)
     const db = await getDb()
     const [sa] = await db.select().from(schema.quizSessions).where(eq(schema.quizSessions.id, a.sessionId))
     const [sb] = await db.select().from(schema.quizSessions).where(eq(schema.quizSessions.id, b.sessionId))
     expect(sa.questionIds).toEqual(sb.questionIds)
+  })
+})
+
+describe('guest quiz limit', () => {
+  it('lets a guest take exactly one quiz, then requires sign-in for more', async () => {
+    await makeUser('guest-limit', true)
+    const first = await quiz.startQuiz('guest-limit', 'title', true, 'thor')
+    expect(first.sessionId).toBeTruthy()
+    await expect(quiz.startQuiz('guest-limit', 'exam', true)).rejects.toMatchObject({ code: 'LIMIT_REACHED' })
+    await expect(quiz.startQuiz('guest-limit', 'title', true, 'loki-s1')).rejects.toMatchObject({ code: 'LIMIT_REACHED' })
+  })
+
+  it('does not limit a signed-in user to one quiz', async () => {
+    await quiz.startQuiz('alice', 'title', false, 'thor')
+    await quiz.startQuiz('alice', 'title', false, 'loki-s1')
+    await quiz.startQuiz('alice', 'exam', false)
+  })
+
+  it('lets a guest keep re-entering the same daily session on the same day', async () => {
+    await makeUser('guest-daily', true)
+    const a = await quiz.startQuiz('guest-daily', 'daily', true)
+    const b = await quiz.startQuiz('guest-daily', 'daily', true)
+    expect(a.sessionId).toBe(b.sessionId)
   })
 })
 
