@@ -92,7 +92,7 @@ export const PHASES: PhaseInfo[] = [
       'Avengers: Doomsday (December 18, 2026) brings heroes from three universes together against Doctor Doom.',
       'Avengers: Secret Wars (December 17, 2027) ends the saga.',
     ],
-    leadsTo: 'Secret Wars closes the Multiverse Saga. What comes after it is unannounced.',
+    leadsTo: 'Secret Wars closes the Multiverse Saga. Marvel has already announced what comes next: Phase 7, the start of the "Mutant Saga," led by a new X-Men film.',
   },
 ]
 
@@ -100,4 +100,7 @@ export const PHASES: PhaseInfo[] = [
 export const ROAD_AHEAD = [
   { id: 'doomsday', name: 'Avengers: Doomsday', date: 'December 18, 2026', note: 'Heroes from three universes face Doctor Doom (Robert Downey Jr.). Directed by Anthony and Joe Russo.' },
   { id: 'secret-wars', name: 'Avengers: Secret Wars', date: 'December 17, 2027', note: 'Closes the Multiverse Saga. Also from the Russo brothers.' },
+  { id: 'x-men-phase7', name: "Marvel's X-Men", date: 'May 5, 2028', note: 'Opens Phase 7 and the "Mutant Saga." Directed by Jake Schreier, starring Christopher Abbott as Professor X and Sadie Sink as Jean Grey.' },
+  { id: 'ghost-rider-phase7', name: 'Ghost Rider', date: 'July 28, 2028', note: 'Phase 7, directed by Shawn Levy and starring Ryan Gosling.' },
+  { id: 'black-panther-3', name: 'Black Panther 3', date: 'December 15, 2028', note: 'Phase 7, directed by Ryan Coogler.' },
 ] as const
