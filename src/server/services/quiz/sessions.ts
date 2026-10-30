@@ -12,9 +12,16 @@ import type { DbOrTx } from '../xp'
 import { fiftyFifty, grade, hashSeed, hintFor, sampleQuestions } from './engine'
 
 export class QuizError extends Error {
-  constructor(public code: 'NOT_FOUND' | 'CONFLICT' | 'BAD_REQUEST' | 'FINISHED', message: string) {
+  constructor(public code: 'NOT_FOUND' | 'CONFLICT' | 'BAD_REQUEST' | 'FINISHED' | 'LIMIT_REACHED', message: string) {
     super(message)
   }
+}
+
+/** Guests get one quiz, any mode, to try the site. After that they must sign in. */
+async function assertGuestAllowed(db: DbOrTx, userId: string, isAnonymous: boolean) {
+  if (!isAnonymous) return
+  const [{ count }] = await db.select({ count: sql<number>`count(*)::int` }).from(quizSessions).where(eq(quizSessions.userId, userId))
+  if (count >= 1) throw new QuizError('LIMIT_REACHED', 'Guests get one free quiz. Sign in to keep taking quizzes and exams.')
 }
 
 const todayKey = () => new Date().toISOString().slice(0, 10)
@@ -28,7 +35,7 @@ function randomSeed() {
 
 /* ─────────────────────────── start ─────────────────────────── */
 
-export async function startQuiz(userId: string, mode: QuizMode, titleId?: string): Promise<{ sessionId: string }> {
+export async function startQuiz(userId: string, mode: QuizMode, isAnonymous: boolean, titleId?: string): Promise<{ sessionId: string }> {
   const db = await getDb()
 
   if (mode === 'daily') {
@@ -38,6 +45,7 @@ export async function startQuiz(userId: string, mode: QuizMode, titleId?: string
       .from(quizSessions)
       .where(and(eq(quizSessions.userId, userId), eq(quizSessions.dailyKey, key)))
     if (existing) return { sessionId: existing.id }
+    await assertGuestAllowed(db, userId, isAnonymous)
     const seed = hashSeed(`daily:${key}`) & 0x7fffffff
     const pool = QUESTIONS.filter((q) => q.spoiler < 2)
     const s = sampleQuestions(pool, { seed, n: DAILY_SIZE, mix: { easy: 2, medium: 2, hard: 1 }, perTitleCap: 1, weightOf })
@@ -79,6 +87,8 @@ export async function startQuiz(userId: string, mode: QuizMode, titleId?: string
     weightOf,
     avoid: new Set(recent.map((r) => r.id)),
   })
+
+  await assertGuestAllowed(db, userId, isAnonymous)
 
   return db.transaction(async (tx) => {
     // One active session per mode (and per title for title quizzes): starting again abandons the old one.
