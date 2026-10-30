@@ -27,19 +27,19 @@ const TICKER: { label: string; icon: IconName }[] = [
   { label: 'GLOBAL RANKS', icon: 'trophy' },
 ]
 
-const TOOLKIT: { title: string; body: string; icon: IconName; color: string }[] = [
-  { title: 'CURATED TRACKS', body: 'Five paths to opening night, from a cram to the complete saga and the Fox X-Men.', icon: 'film', color: '#FFD23F' },
-  { title: 'TRAILERS', body: 'Watch the trailer for every title before you commit.', icon: 'play', color: '#4FC3F7' },
-  { title: 'WHERE TO WATCH', body: 'Legal streams, rentals and buys for your country.', icon: 'tvPlay', color: '#B388FF' },
-  { title: 'PHASE ROADMAP', body: 'All six MCU Phases laid out, with your progress in each.', icon: 'layers', color: '#FF8A3D' },
-  { title: 'MCU NEWS', body: 'Fresh Marvel headlines, linked straight to the source.', icon: 'alert', color: '#FFD23F' },
-  { title: 'KNOW YOUR MCU', body: 'Stan Lee, Doctor Doom, where Strange is now, and more.', icon: 'bulb', color: '#4FC3F7' },
-  { title: 'READINESS EXAM', body: '20 random, server-graded questions. Score 80% to pass.', icon: 'bolt', color: '#FF8A3D' },
-  { title: 'COMBOS & XP', body: 'Chain correct answers for up to a ×5 multiplier.', icon: 'flame', color: '#C8102E' },
-  { title: 'DAILY CHALLENGE', body: 'Same five questions for everyone, every day. One shot.', icon: 'calendar', color: '#B388FF' },
-  { title: 'LEADERBOARDS', body: 'All-time, weekly and daily boards.', icon: 'trophy', color: '#FFD23F' },
-  { title: 'WEAK-SPOT REPORT', body: 'Every miss points you to the exact title to rewatch.', icon: 'target', color: '#4FC3F7' },
-  { title: 'READY CARD', body: 'Share your verdict on X and WhatsApp.', icon: 'share', color: '#FF8A3D' },
+const TOOLKIT: { title: string; body: string; icon: IconName; color: string; to: string }[] = [
+  { title: 'CURATED TRACKS', body: 'Five paths to opening night, from a cram to the complete saga and the Fox X-Men.', icon: 'film', color: '#FFD23F', to: '/tracks' },
+  { title: 'TRAILERS', body: 'Watch the trailer for every title before you commit.', icon: 'play', color: '#4FC3F7', to: '/tracks' },
+  { title: 'WHERE TO WATCH', body: 'Legal streams, rentals and buys for your country.', icon: 'tvPlay', color: '#B388FF', to: '/tracks' },
+  { title: 'PHASE ROADMAP', body: 'All six MCU Phases laid out, with your progress in each.', icon: 'layers', color: '#FF8A3D', to: '/phases' },
+  { title: 'MCU NEWS', body: 'Fresh Marvel headlines, linked straight to the source.', icon: 'alert', color: '#FFD23F', to: '/news' },
+  { title: 'KNOW YOUR MCU', body: 'Stan Lee, Doctor Doom, where Strange is now, and more.', icon: 'bulb', color: '#4FC3F7', to: '/lore' },
+  { title: 'READINESS EXAM', body: '20 random, server-graded questions. Score 80% to pass.', icon: 'bolt', color: '#FF8A3D', to: '/quiz' },
+  { title: 'COMBOS & XP', body: 'Chain correct answers for up to a ×5 multiplier.', icon: 'flame', color: '#C8102E', to: '/quiz' },
+  { title: 'DAILY CHALLENGE', body: 'Same five questions for everyone, every day. One shot.', icon: 'calendar', color: '#B388FF', to: '/quiz' },
+  { title: 'LEADERBOARDS', body: 'All-time, weekly and daily boards.', icon: 'trophy', color: '#FFD23F', to: '/leaderboard' },
+  { title: 'WEAK-SPOT REPORT', body: 'Every miss points you to the exact title to rewatch.', icon: 'target', color: '#4FC3F7', to: '/quiz' },
+  { title: 'READY CARD', body: 'Share your verdict on X and WhatsApp.', icon: 'share', color: '#FF8A3D', to: '/quiz' },
 ]
 
 const STEPS = [
@@ -147,15 +147,16 @@ function Landing() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: (i % 4) * 0.06 }}
-                className="lift flex items-start gap-3.5 border-4 border-ink bg-white p-4 shadow-[5px_5px_0_#111]"
               >
-                <span className="ico flex h-14 w-14 flex-none items-center justify-center rounded-full border-[3px] border-ink shadow-[3px_3px_0_#111]" style={{ background: f.color }}>
-                  <Icon name={f.icon} size={28} strokeWidth={2.4} className={f.color === '#C8102E' ? 'text-paper' : undefined} />
-                </span>
-                <div>
-                  <div className="font-display text-[1.6rem] leading-tight">{f.title}</div>
-                  <div className="text-[15px] font-semibold leading-snug">{f.body}</div>
-                </div>
+                <Link to={f.to} className="lift flex items-start gap-3.5 border-4 border-ink bg-white p-4 text-ink no-underline shadow-[5px_5px_0_#111]">
+                  <span className="ico flex h-14 w-14 flex-none items-center justify-center rounded-full border-[3px] border-ink shadow-[3px_3px_0_#111]" style={{ background: f.color }}>
+                    <Icon name={f.icon} size={28} strokeWidth={2.4} className={f.color === '#C8102E' ? 'text-paper' : undefined} />
+                  </span>
+                  <div>
+                    <div className="font-display text-[1.6rem] leading-tight">{f.title}</div>
+                    <div className="text-[15px] font-semibold leading-snug">{f.body}</div>
+                  </div>
+                </Link>
               </motion.div>
             ))}
           </div>
