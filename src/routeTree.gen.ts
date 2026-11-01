@@ -19,6 +19,7 @@ import { Route as NewsRouteImport } from './routes/news'
 import { Route as PhasesRouteImport } from './routes/phases'
 import { Route as ApiHealthRouteImport } from './routes/api/health'
 import { Route as ApiNewsRouteImport } from './routes/api/news'
+import { Route as CardSessionIdRouteImport } from './routes/card/$sessionId'
 import { Route as QuizIndexRouteImport } from './routes/quiz/index'
 import { Route as QuizSessionIdRouteImport } from './routes/quiz/$sessionId'
 import { Route as ResultSessionIdRouteImport } from './routes/result/$sessionId'
@@ -26,6 +27,7 @@ import { Route as TitlesTitleIdRouteImport } from './routes/titles/$titleId'
 import { Route as TracksIndexRouteImport } from './routes/tracks/index'
 import { Route as TracksTrackIdRouteImport } from './routes/tracks/$trackId'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiOgCardSessionIdRouteImport } from './routes/api/og/card/$sessionId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -77,6 +79,11 @@ const ApiNewsRoute = ApiNewsRouteImport.update({
   path: '/api/news',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CardSessionIdRoute = CardSessionIdRouteImport.update({
+  id: '/card/$sessionId',
+  path: '/card/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizIndexRoute = QuizIndexRouteImport.update({
   id: '/quiz/',
   path: '/quiz/',
@@ -112,6 +119,11 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiOgCardSessionIdRoute = ApiOgCardSessionIdRouteImport.update({
+  id: '/api/og/card/$sessionId',
+  path: '/api/og/card/$sessionId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -124,6 +136,7 @@ export interface FileRoutesByFullPath {
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/news': typeof ApiNewsRoute
+  '/card/$sessionId': typeof CardSessionIdRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -131,6 +144,7 @@ export interface FileRoutesByFullPath {
   '/quiz/': typeof QuizIndexRoute
   '/tracks/': typeof TracksIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/og/card/$sessionId': typeof ApiOgCardSessionIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -143,6 +157,7 @@ export interface FileRoutesByTo {
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/news': typeof ApiNewsRoute
+  '/card/$sessionId': typeof CardSessionIdRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -150,6 +165,7 @@ export interface FileRoutesByTo {
   '/quiz': typeof QuizIndexRoute
   '/tracks': typeof TracksIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/og/card/$sessionId': typeof ApiOgCardSessionIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -163,6 +179,7 @@ export interface FileRoutesById {
   '/phases': typeof PhasesRoute
   '/api/health': typeof ApiHealthRoute
   '/api/news': typeof ApiNewsRoute
+  '/card/$sessionId': typeof CardSessionIdRoute
   '/quiz/$sessionId': typeof QuizSessionIdRoute
   '/result/$sessionId': typeof ResultSessionIdRoute
   '/titles/$titleId': typeof TitlesTitleIdRoute
@@ -170,6 +187,7 @@ export interface FileRoutesById {
   '/quiz/': typeof QuizIndexRoute
   '/tracks/': typeof TracksIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/og/card/$sessionId': typeof ApiOgCardSessionIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -184,6 +202,7 @@ export interface FileRouteTypes {
     | '/phases'
     | '/api/health'
     | '/api/news'
+    | '/card/$sessionId'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -191,6 +210,7 @@ export interface FileRouteTypes {
     | '/quiz/'
     | '/tracks/'
     | '/api/auth/$'
+    | '/api/og/card/$sessionId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -203,6 +223,7 @@ export interface FileRouteTypes {
     | '/phases'
     | '/api/health'
     | '/api/news'
+    | '/card/$sessionId'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -210,6 +231,7 @@ export interface FileRouteTypes {
     | '/quiz'
     | '/tracks'
     | '/api/auth/$'
+    | '/api/og/card/$sessionId'
   id:
     | '__root__'
     | '/'
@@ -222,6 +244,7 @@ export interface FileRouteTypes {
     | '/phases'
     | '/api/health'
     | '/api/news'
+    | '/card/$sessionId'
     | '/quiz/$sessionId'
     | '/result/$sessionId'
     | '/titles/$titleId'
@@ -229,6 +252,7 @@ export interface FileRouteTypes {
     | '/quiz/'
     | '/tracks/'
     | '/api/auth/$'
+    | '/api/og/card/$sessionId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -242,6 +266,7 @@ export interface RootRouteChildren {
   PhasesRoute: typeof PhasesRoute
   ApiHealthRoute: typeof ApiHealthRoute
   ApiNewsRoute: typeof ApiNewsRoute
+  CardSessionIdRoute: typeof CardSessionIdRoute
   QuizSessionIdRoute: typeof QuizSessionIdRoute
   ResultSessionIdRoute: typeof ResultSessionIdRoute
   TitlesTitleIdRoute: typeof TitlesTitleIdRoute
@@ -249,6 +274,7 @@ export interface RootRouteChildren {
   QuizIndexRoute: typeof QuizIndexRoute
   TracksIndexRoute: typeof TracksIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiOgCardSessionIdRoute: typeof ApiOgCardSessionIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -323,6 +349,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiNewsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/card/$sessionId': {
+      id: '/card/$sessionId'
+      path: '/card/$sessionId'
+      fullPath: '/card/$sessionId'
+      preLoaderRoute: typeof CardSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quiz/': {
       id: '/quiz/'
       path: '/quiz'
@@ -372,6 +405,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/og/card/$sessionId': {
+      id: '/api/og/card/$sessionId'
+      path: '/api/og/card/$sessionId'
+      fullPath: '/api/og/card/$sessionId'
+      preLoaderRoute: typeof ApiOgCardSessionIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -386,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   PhasesRoute: PhasesRoute,
   ApiHealthRoute: ApiHealthRoute,
   ApiNewsRoute: ApiNewsRoute,
+  CardSessionIdRoute: CardSessionIdRoute,
   QuizSessionIdRoute: QuizSessionIdRoute,
   ResultSessionIdRoute: ResultSessionIdRoute,
   TitlesTitleIdRoute: TitlesTitleIdRoute,
@@ -393,16 +434,8 @@ const rootRouteChildren: RootRouteChildren = {
   QuizIndexRoute: QuizIndexRoute,
   TracksIndexRoute: TracksIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiOgCardSessionIdRoute: ApiOgCardSessionIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -3,9 +3,9 @@ import { TITLE_BY_ID } from '../../../content/catalog'
 import { QUESTIONS, QUESTION_BY_ID, questionsForTitle } from '../../../content/questions'
 import type { Question } from '../../../content/questions'
 import { DAILY_SIZE, EXAM_SIZE, GRACE_MS, TIME_LIMIT_MS, TITLE_QUIZ_SIZE, XP, rankFor, verdictFor } from '../../../shared/game'
-import type { ClientQuestion, QuizMode, QuizResult, QuizState } from '../../../shared/quiz-types'
+import type { ClientQuestion, PublicCard, QuizMode, QuizResult, QuizState } from '../../../shared/quiz-types'
 import { getDb } from '../../db/client'
-import { questionExposures, quizAnswers, quizSessions, userStats, xpEvents } from '../../db/schema'
+import { questionExposures, quizAnswers, quizSessions, user, userStats, xpEvents } from '../../db/schema'
 import type { QuizSessionRow } from '../../db/schema'
 import { awardXp, ensureStats, getStats } from '../xp'
 import type { DbOrTx } from '../xp'
@@ -328,6 +328,45 @@ export async function getQuizResult(userId: string, sessionId: string): Promise<
     readyAt: stats?.readyAt?.toISOString() ?? null,
     weakSpots,
     review,
+  }
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** Finished sessions only. Anyone with the link can read this. It never includes the answer key. */
+export async function getPublicCard(sessionId: string): Promise<PublicCard> {
+  if (!UUID_RE.test(sessionId)) throw new QuizError('NOT_FOUND', 'Card not found')
+  const db = await getDb()
+  const [row] = await db
+    .select({
+      id: quizSessions.id,
+      userId: quizSessions.userId,
+      mode: quizSessions.mode,
+      titleId: quizSessions.titleId,
+      correct: quizSessions.correct,
+      status: quizSessions.status,
+      total: sql<number>`jsonb_array_length(${quizSessions.questionIds})::int`,
+      name: user.name,
+    })
+    .from(quizSessions)
+    .innerJoin(user, eq(user.id, quizSessions.userId))
+    .where(eq(quizSessions.id, sessionId))
+  if (!row || row.status !== 'finished') throw new QuizError('NOT_FOUND', 'Card not found')
+  const v = verdictFor(row.correct, row.total)
+  const stats = await getStats(db, row.userId)
+  return {
+    sessionId: row.id,
+    name: row.name,
+    mode: row.mode,
+    titleName: row.titleId ? (TITLE_BY_ID.get(row.titleId)?.name ?? null) : null,
+    total: row.total,
+    correct: row.correct,
+    pct: v.pct,
+    ready: v.ready,
+    title: v.title,
+    line: v.line,
+    countsForReady: row.mode === 'exam',
+    rank: rankFor(stats?.totalXp ?? 0).name,
   }
 }
 

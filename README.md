@@ -52,7 +52,7 @@ That's it. No database to install: without `DATABASE_URL` the app runs an embedd
 - **Accounts:**
   - Everyone starts as a **guest** automatically, with progress saved server-side.
   - Signing up keeps all of it (Better Auth anonymous → email/password, plus Google/Discord when configured).
-- **Content:** 52 titles (MCU films, Disney+ series, Fox X-Men) and a 162-question bank (43 easy, 99 medium, 20 hard) in [`src/content`](src/content).
+- **Content:** 77 titles (MCU films, Disney+ series, Fox X-Men) and a 356-question bank (103 easy, 183 medium, 70 hard) in [`src/content`](src/content).
 
 ## Project layout
 

@@ -15,6 +15,7 @@ const quiz = await import('../src/server/services/quiz/sessions')
 const { mergeUserData } = await import('../src/server/services/merge')
 const { getLeaderboard } = await import('../src/server/services/leaderboard')
 const { QUESTION_BY_ID } = await import('../src/content/questions')
+const reports = await import('../src/server/services/reports')
 
 async function makeUser(id: string, anon = false) {
   const db = await getDb()
@@ -122,6 +123,46 @@ describe('quiz sessions', () => {
       for (let i = 0; i < 20; i++) await answerCurrent('carol', sessionId, i < right)
       expect((await quiz.getQuizResult('carol', sessionId)).ready).toBe(ready)
     }
+  })
+
+  it('publishes a finished card with no answer key, and hides an active session', async () => {
+    await makeUser('erin')
+    const { sessionId } = await quiz.startQuiz('erin', 'title', false, 'iron-man')
+    await expect(quiz.getPublicCard(sessionId)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    await expect(quiz.getPublicCard('not-a-uuid')).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    for (;;) {
+      const s = await quiz.getQuizState('erin', sessionId)
+      if (!s.question) break
+      const res = await answerCurrent('erin', sessionId, true)
+      if (res.finished) break
+    }
+    const card = await quiz.getPublicCard(sessionId)
+    expect(card.name).toBe('erin')
+    expect(card.correct).toBe(card.total)
+    expect(card.countsForReady).toBe(false)
+    expect(card.mode).toBe('title')
+    expect(Object.keys(card).sort()).toEqual(
+      ['correct', 'countsForReady', 'line', 'mode', 'name', 'pct', 'rank', 'ready', 'sessionId', 'title', 'titleName', 'total'].sort(),
+    )
+    const dumped = JSON.stringify(card)
+    expect(dumped).not.toMatch(/explanation|correctAnswer|questionIds|weakSpots|review|email/)
+    await expect(quiz.getQuizResult('bob', sessionId)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+  })
+
+  it('records one report per user and question, and rejects an unserved index', async () => {
+    await makeUser('frank')
+    const { sessionId } = await quiz.startQuiz('frank', 'title', false, 'thor')
+    await expect(reports.reportQuestion('frank', sessionId, 0)).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    await quiz.getQuizState('frank', sessionId)
+    expect(await reports.reportQuestion('frank', sessionId, 0, '  typo  ')).toEqual({ ok: true })
+    expect(await reports.reportQuestion('frank', sessionId, 0, 'again')).toEqual({ ok: true })
+    await expect(reports.reportQuestion('frank', sessionId, 2)).rejects.toMatchObject({ code: 'BAD_REQUEST' })
+    await expect(reports.reportQuestion('bob', sessionId, 0)).rejects.toMatchObject({ code: 'NOT_FOUND' })
+    const db = await getDb()
+    const rows = await db.select().from(schema.questionReports).where(eq(schema.questionReports.userId, 'frank'))
+    expect(rows).toHaveLength(1)
+    expect(rows[0].note).toBe('typo')
+    expect(rows[0].questionId).toBeTruthy()
   })
 
   it('daily challenge: same questions for everyone, one attempt each', async () => {

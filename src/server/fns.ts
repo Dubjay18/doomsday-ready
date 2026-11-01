@@ -13,7 +13,8 @@ import { getDb } from './db/client'
 import { getLeaderboard } from './services/leaderboard'
 import { getNews } from './services/news'
 import { getWatchedIds, setActiveTrack, setWatched } from './services/progress'
-import { answerQuestion, getQuizResult, getQuizState, recentSessions, startQuiz, useLifeline } from './services/quiz/sessions'
+import { reportQuestion } from './services/reports'
+import { answerQuestion, getPublicCard, getQuizResult, getQuizState, recentSessions, startQuiz, useLifeline } from './services/quiz/sessions'
 import { getPosters, getWatchOptions } from './services/watch'
 import { getStats } from './services/xp'
 import { detectCountry, getSessionUser, requireUser } from './session'
@@ -117,6 +118,18 @@ export const getQuizResultFn = createServerFn({ method: 'GET' })
     const u = await getSessionUser()
     if (!u) throw new Error('Not found')
     return getQuizResult(u.id, data.sessionId)
+  })
+
+/** Public finished-session card. No auth. No answer key. */
+export const getPublicCardFn = createServerFn({ method: 'GET' })
+  .validator(sessionInput)
+  .handler(async ({ data }) => getPublicCard(data.sessionId))
+
+export const reportQuestionFn = createServerFn({ method: 'POST' })
+  .validator(z.object({ sessionId: z.uuid(), index: z.number().int().min(0).max(50), note: z.string().max(280).optional() }))
+  .handler(async ({ data }) => {
+    const u = await requireUser()
+    return reportQuestion(u.id, data.sessionId, data.index, data.note)
   })
 
 export const recentQuizzesFn = createServerFn({ method: 'GET' }).handler(async () => {

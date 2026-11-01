@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
 import { Burst, cn } from '../../components/comic'
 import { Icon } from '../../components/Icon'
+import { ReportQuestion } from '../../components/ReportQuestion'
 import { answerFn, getQuizStateFn, lifelineFn } from '../../server/fns'
 import type { AnswerResult, ClientQuestion, QuizState } from '../../shared/quiz-types'
 
@@ -235,7 +236,7 @@ function QuizPlay() {
               <motion.button
                 key={`${question.index}-${o.id}`}
                 type="button"
-                disabled={phase !== 'question' || o.hidden || phase === 'submitting'}
+                disabled={phase !== 'question' || o.hidden}
                 onClick={() => submit(o.id)}
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: o.hidden ? 0.25 : submittingThis ? 0.7 : 1, y: 0, x: isWrongPick ? [0, -10, 10, -6, 6, 0] : 0 }}
@@ -307,6 +308,7 @@ function QuizPlay() {
         </AnimatePresence>
         {error && <p className="mt-4 font-bold text-pow">{error}</p>}
         <p className="mt-8 text-sm font-semibold opacity-70">Tip: press A–D to answer, Enter for the next question.</p>
+        {question && <ReportQuestion key={question.index} sessionId={sessionId} index={question.index} dark />}
       </div>
     </main>
   )

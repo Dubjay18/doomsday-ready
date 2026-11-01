@@ -4,17 +4,26 @@ import { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import { btnClass, cn } from '../../components/comic'
 import { Icon } from '../../components/Icon'
+import { ReportQuestion } from '../../components/ReportQuestion'
 import { meQuery, quizResultQuery } from '../../lib/queries'
-import { startQuizFn } from '../../server/fns'
+import { siteOriginFn, startQuizFn } from '../../server/fns'
+import { stampLabel } from '../../shared/game'
 
 export const Route = createFileRoute('/result/$sessionId')({
-  loader: ({ context, params }) => context.queryClient.ensureQueryData(quizResultQuery(params.sessionId)),
+  loader: async ({ context, params }) => {
+    const [, origin] = await Promise.all([
+      context.queryClient.ensureQueryData(quizResultQuery(params.sessionId)),
+      siteOriginFn(),
+    ])
+    return { origin }
+  },
   head: () => ({ meta: [{ title: 'Your verdict · Doomsday Ready' }] }),
   component: ResultPage,
 })
 
 function ResultPage() {
   const { sessionId } = Route.useParams()
+  const { origin } = Route.useLoaderData()
   const { data: r } = useQuery(quizResultQuery(sessionId))
   const { data: me } = useQuery(meQuery)
   const navigate = useNavigate()
@@ -41,11 +50,12 @@ function ResultPage() {
   }, [r?.ready])
 
   if (!r) return null
+  const stamp = stampLabel(r.mode, r.title, r.ready, r.pct)
   const shareText =
     r.mode === 'exam'
-      ? `I scored ${r.pct}% on the Avengers: Doomsday Readiness Exam: ${r.title} Are you ready?`
+      ? `I scored ${r.pct}% on the Avengers: Doomsday Readiness Exam: ${stamp} Are you ready?`
       : `I scored ${r.correct}/${r.total} on Doomsday Ready${r.titleName ? ` (${r.titleName})` : ''}. Can you beat it?`
-  const url = typeof window !== 'undefined' ? window.location.origin : ''
+  const url = `${origin}/card/${sessionId}`
   const verdictColor = r.ready ? '#2E7D32' : r.pct >= 50 ? '#FF8A3D' : '#C8102E'
 
   return (
@@ -63,7 +73,7 @@ function ResultPage() {
           className="mt-8 border-[6px] border-ink bg-paper px-8 py-5 shadow-[14px_14px_0_#111] sm:px-12"
         >
           <div className="font-display ink-stroke text-[clamp(56px,11vw,140px)] leading-[0.9]" style={{ color: verdictColor, textShadow: '6px 6px 0 #111' }}>
-            {r.mode === 'exam' ? r.title : r.ready ? 'NAILED IT!' : r.pct >= 50 ? 'NOT BAD!' : 'OOF!'}
+            {stamp}
           </div>
         </motion.div>
         <p className="mt-6 max-w-xl text-xl font-bold">{r.mode === 'exam' ? r.line : 'Title and daily quizzes earn XP. Only the Readiness Exam awards the READY badge.'}</p>
@@ -122,6 +132,7 @@ function ResultPage() {
             </button>
           )}
         </div>
+        <p className="mt-4 max-w-md text-sm font-semibold">Anyone with the link sees the stamp and the score. The answer key stays on this page.</p>
 
         {me?.user?.isAnonymous && (
           <div className="mt-10 flex w-full flex-wrap items-center justify-center gap-4 border-4 border-ink bg-white p-5 shadow-[6px_6px_0_#111]">
@@ -150,6 +161,7 @@ function ResultPage() {
                       Correct: <b>{q.correctAnswer}</b> {q.points > 0 && <span className="text-win">· +{q.points}</span>}
                     </div>
                     <div className="mt-1 text-sm">{q.explanation}</div>
+                    <ReportQuestion sessionId={sessionId} index={i} />
                   </div>
                 </div>
               </li>

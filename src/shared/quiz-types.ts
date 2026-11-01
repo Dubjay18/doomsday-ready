@@ -38,6 +38,22 @@ export interface AnswerResult {
   finished: boolean
 }
 
+/** Public share card. Score and stamp only: no review, explanations, or correct answers. */
+export interface PublicCard {
+  sessionId: string
+  name: string
+  mode: QuizMode
+  titleName: string | null
+  total: number
+  correct: number
+  pct: number
+  ready: boolean
+  title: string
+  line: string
+  countsForReady: boolean
+  rank: string
+}
+
 export interface QuizResult {
   sessionId: string
   mode: QuizMode

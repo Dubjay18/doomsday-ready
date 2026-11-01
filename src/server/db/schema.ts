@@ -136,6 +136,19 @@ export const quizAnswers = pgTable(
   (t) => [primaryKey({ columns: [t.sessionId, t.index] })],
 )
 
+export const questionReports = pgTable(
+  'question_reports',
+  {
+    id: uuid('id').primaryKey().defaultRandom(),
+    userId: text('user_id').notNull(),
+    questionId: text('question_id').notNull(),
+    sessionId: uuid('session_id'),
+    note: text('note'),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+  },
+  (t) => [uniqueIndex('report_once').on(t.userId, t.questionId)],
+)
+
 export const questionExposures = pgTable(
   'question_exposures',
   {
