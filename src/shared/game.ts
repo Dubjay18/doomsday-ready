@@ -55,3 +55,11 @@ export function verdictFor(correct: number, total: number) {
   else [title, line] = ['CIVILIAN', 'Please evacuate the area. Then go watch the Speedrun track.']
   return { pct, ready, title, line }
 }
+
+/** Stamp text shared by the private verdict and the public card. Exams use the verdict title. */
+export function stampLabel(mode: 'exam' | 'title' | 'daily', verdictTitle: string, ready: boolean, pct: number) {
+  if (mode === 'exam') return verdictTitle
+  if (ready) return 'NAILED IT!'
+  if (pct >= 50) return 'NOT BAD!'
+  return 'OOF!'
+}

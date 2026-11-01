@@ -12,34 +12,41 @@ import { ToastProvider } from '../lib/toast'
 import { siteOriginFn } from '../server/fns'
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  head: ({ loaderData }) => {
+  head: ({ loaderData, matches }) => {
     const origin = (loaderData as { origin?: string } | undefined)?.origin ?? ''
+    // Child head meta is concatenated. On a share card, skip the default title and
+    // og/twitter tags so scrapers use the card image instead of /og.png.
+    const onCard = matches.some((m) => m.pathname.startsWith('/card/'))
     const image = `${origin}/og.png`
     const desc = 'Pick a watch track, tick off the MCU, and prove you’re ready for Avengers: Doomsday with randomised quizzes and leaderboards.'
     return {
     meta: [
       { charSet: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-      { title: 'Doomsday Ready: get ready for Avengers: Doomsday' },
-      { name: 'description', content: desc },
+      ...(onCard ? [] : [{ title: 'Doomsday Ready: get ready for Avengers: Doomsday' }]),
+      ...(onCard ? [] : [{ name: 'description', content: desc }]),
       { name: 'theme-color', content: '#111111' },
       { name: 'mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-capable', content: 'yes' },
       { name: 'apple-mobile-web-app-title', content: 'Doomsday' },
       { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
-      { property: 'og:type', content: 'website' },
-      { property: 'og:site_name', content: 'Doomsday Ready' },
-      { property: 'og:title', content: 'Doomsday Ready: are you ready for Avengers: Doomsday?' },
-      { property: 'og:description', content: 'Pick a track, binge, and prove it. Watch tracks, quizzes and a leaderboard for Dec 18, 2026.' },
-      { property: 'og:image', content: image },
-      { property: 'og:image:type', content: 'image/png' },
-      { property: 'og:image:width', content: '1200' },
-      { property: 'og:image:height', content: '630' },
-      { property: 'og:image:alt', content: 'Doomsday Ready: Are you ready for Doomsday? Avengers: Doomsday, December 18, 2026.' },
-      { name: 'twitter:card', content: 'summary_large_image' },
-      { name: 'twitter:title', content: 'Doomsday Ready: are you ready for Avengers: Doomsday?' },
-      { name: 'twitter:description', content: 'Pick a track, binge, and prove it.' },
-      { name: 'twitter:image', content: image },
+      ...(onCard
+        ? []
+        : [
+            { property: 'og:type', content: 'website' },
+            { property: 'og:site_name', content: 'Doomsday Ready' },
+            { property: 'og:title', content: 'Doomsday Ready: are you ready for Avengers: Doomsday?' },
+            { property: 'og:description', content: 'Pick a track, binge, and prove it. Watch tracks, quizzes and a leaderboard for Dec 18, 2026.' },
+            { property: 'og:image', content: image },
+            { property: 'og:image:type', content: 'image/png' },
+            { property: 'og:image:width', content: '1200' },
+            { property: 'og:image:height', content: '630' },
+            { property: 'og:image:alt', content: 'Doomsday Ready: Are you ready for Doomsday? Avengers: Doomsday, December 18, 2026.' },
+            { name: 'twitter:card', content: 'summary_large_image' },
+            { name: 'twitter:title', content: 'Doomsday Ready: are you ready for Avengers: Doomsday?' },
+            { name: 'twitter:description', content: 'Pick a track, binge, and prove it.' },
+            { name: 'twitter:image', content: image },
+          ]),
     ],
     links: [
       { rel: 'stylesheet', href: appCss },
